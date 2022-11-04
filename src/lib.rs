@@ -32,4 +32,24 @@ mod tests {
             Ok("3".to_string())
         );
     }
+
+    #[test]
+    fn it_works_with_serde() {
+        #[derive(Serialize, Deserialize)]
+        struct Person {
+            name: String,
+            age: u32,
+        }
+
+        #[allow(unused)]
+        #[dynfn]
+        fn simple_with_serde(person: Person) -> String {
+            format!("Hello, {}!", person.name)
+        }
+
+        assert_eq!(
+            simple_with_serde(Some("{\"person\": {\"name\": \"John\", \"age\": 42}}".to_string())),
+            Ok("\"Hello, John!\"".to_string())
+        );
+    }
 }
