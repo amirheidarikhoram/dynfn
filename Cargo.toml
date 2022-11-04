@@ -6,4 +6,9 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+dynfn-core = { path = "dynfn-core" }
 dynfn-proc-macros = { path = "dynfn-proc-macros" }
+serde = { version = "1.0.147", features = ["derive"] }
+serde_json = "1.0.87"
+async-trait = "0.1.58"
+static_assertions = "1.1.0"

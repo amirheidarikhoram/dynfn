@@ -7,11 +7,16 @@ pub struct DataStructure {
     pub function: Function,
 }
 
+impl DataStructure {
+    pub fn get_name(&self) -> String {
+        format!("{}{}", self.function.name[0..1].to_uppercase() + &self.function.name[1..], "Data")
+    }
+}
+
 impl ToTokens for DataStructure {
     fn to_tokens(&self, tokens: &mut proc_macro2::TokenStream) {
-        let func = (&self.function.item).clone().sig.ident.to_string();
         let struct_ident = syn::Ident::new(
-            format!("{}{}", func[0..1].to_uppercase() + &func[1..], "Data").as_str(),
+            &self.get_name().as_str(),
             proc_macro2::Span::call_site(),
         );
 
@@ -33,7 +38,7 @@ impl ToTokens for DataStructure {
             })
             .collect::<Vec<proc_macro2::TokenStream>>();
         let data_struct = quote! {
-            #[derive(serde::Serialize, serde::Deserialize)]
+            #[derive(Serialize, Deserialize)]
             struct #struct_ident {
                 #(#fiedls)*
             }

@@ -1,6 +1,6 @@
-use std::io::Result;
 use serde::{Serialize, Deserialize};
+use std::result::Result;
 
-pub trait Callable<'a, T, R> where T: Serialize + Deserialize<'a>, R: Serialize + Deserialize<'a> {
-    fn call(args: T) -> Result<R>;
+pub trait Callable<T, R> where T: Serialize + Deserialize<'static>, R: Serialize + Deserialize<'static> {
+    fn call(args: T) -> Result<R, ()>;
 }

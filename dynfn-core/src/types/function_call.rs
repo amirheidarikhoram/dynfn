@@ -24,8 +24,17 @@ impl ToTokens for FunctionCall {
         });
 
         let function_call = quote! {
-            let result = #func(#(#arguments),*).await;
-            serde_json::to_string(&result).expect("An error occured while parsing json")
+            let result = #func(#(#arguments),*);
+            let ser_result = serde_json::to_string(&result);
+
+            match ser_result {
+                Ok(ser_result) => {
+                    Ok(ser_result)
+                }
+                Err(_) => {
+                    Err(())
+                }
+            }
         };
 
         tokens.extend(function_call);
