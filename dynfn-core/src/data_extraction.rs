@@ -1,7 +1,7 @@
 use quote::{quote, ToTokens};
 use syn::{Ident, PatType};
 
-use super::Function;
+use crate::function::Function;
 
 pub struct DataExtraction {
     pub name: String,

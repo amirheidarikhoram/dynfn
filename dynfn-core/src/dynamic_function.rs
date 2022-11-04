@@ -1,0 +1,1 @@
+pub type DynamicFunction = fn(Option<String>) -> Result<String, ()>;

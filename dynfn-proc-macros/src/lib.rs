@@ -1,4 +1,4 @@
-use dynfn_core::types::*;
+use dynfn_core::*;
 use proc_macro::TokenStream;
 use quote::quote;
 

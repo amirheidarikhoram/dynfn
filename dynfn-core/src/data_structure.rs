@@ -1,7 +1,7 @@
 use quote::{quote, ToTokens};
 use syn::PatType;
 
-use super::Function;
+use crate::function::Function;
 
 pub struct DataStructure {
     pub function: Function,
