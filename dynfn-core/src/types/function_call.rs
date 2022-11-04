@@ -25,9 +25,7 @@ impl ToTokens for FunctionCall {
 
         let function_call = quote! {
             let result = #func(#(#arguments),*);
-            let ser_result = serde_json::to_string(&result);
-
-            match ser_result {
+            match serde_json::to_string(&result) {
                 Ok(ser_result) => {
                     Ok(ser_result)
                 }

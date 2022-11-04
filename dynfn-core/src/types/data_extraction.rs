@@ -30,14 +30,15 @@ impl ToTokens for DataExtraction {
             })
             .collect::<Vec<proc_macro2::TokenStream>>();
 
-        let extractions = quote! {
-            let #struct_ident {
-                #(#fiedls)*
-            } = serde_json::from_str(&data).expect("An error occured while parsing json");
+        if fiedls.len() != 0 {
+            let extractions = quote! {
+                let #struct_ident {
+                    #(#fiedls)*
+                } = serde_json::from_str(&data.unwrap()).expect("An error occured while parsing json");
 
-        };
-
-        tokens.extend(extractions);
+            };
+            tokens.extend(extractions);
+        }
     }
 }
 

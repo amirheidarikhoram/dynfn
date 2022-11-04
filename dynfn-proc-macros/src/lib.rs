@@ -8,6 +8,8 @@ pub fn dynfn(_: TokenStream, input: TokenStream) -> TokenStream {
     let inner_func = syn::parse_macro_input!(default_input as syn::ItemFn);
 
     let item_fn = syn::parse_macro_input!(input as syn::ItemFn);
+
+    let visibility = item_fn.vis.clone();
     let fn_name = item_fn.sig.ident.clone();
     let function = Function {
         name: item_fn.sig.ident.to_string(),
@@ -37,19 +39,14 @@ pub fn dynfn(_: TokenStream, input: TokenStream) -> TokenStream {
 
         #data_structure
 
-        #[allow(non_camel_case_types)]
-        pub struct #fn_name;
+        #visibility fn #fn_name (data: Option<String>) -> std::result::Result<String, ()> {
+            use serde_json;
 
-        impl Callable<String, String> for #fn_name {
-            fn call(data: String) -> std::result::Result<String, ()> {
-                use serde_json;
+            #inner_func
 
-                #inner_func
+            #data_extraction
 
-                #data_extraction
-
-                #function_call
-            }
+            #function_call
         }
     };
 
