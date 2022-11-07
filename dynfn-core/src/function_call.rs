@@ -11,6 +11,15 @@ impl ToTokens for FunctionCall {
     fn to_tokens(&self, tokens: &mut proc_macro2::TokenStream) {
         let item_fn = (&self.function.item).clone();
 
+        let asyncness = item_fn.sig.asyncness.clone();
+
+        let await_execution = match asyncness {
+            Some(_) => quote::quote!(
+                .await;
+            ),
+            None => quote::quote!(;)
+        };
+
         let func = (&item_fn.sig.ident).clone();
 
         let arguments = item_fn.sig.inputs.iter().map(|arg| match arg {
@@ -24,7 +33,7 @@ impl ToTokens for FunctionCall {
         });
 
         let function_call = quote! {
-            let result = #func(#(#arguments),*);
+            let result = #func(#(#arguments),*)#await_execution
             match serde_json::to_string(&result) {
                 Ok(ser_result) => {
                     Ok(ser_result)
@@ -39,8 +48,9 @@ impl ToTokens for FunctionCall {
     }
 }
 
+// FIXME: update tests
 #[cfg(test)]
-mod tests {
+mod function_call_tests {
     use super::*;
     use syn::parse_quote;
 

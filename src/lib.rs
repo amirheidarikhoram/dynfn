@@ -11,10 +11,17 @@ mod tests {
             "Hello, world!".to_string()
         }
 
-        assert_eq!(
-            simple(None),
-            Ok("\"Hello, world!\"".to_string())
-        );
+        assert_eq!(simple(None), Ok("\"Hello, world!\"".to_string()));
+    }
+
+    #[test]
+    fn it_works_for_async () {
+
+        #[dynfn]
+        pub async fn sum (a: i32, b: i32) -> i32 {
+            a + b
+        }
+
     }
 
     #[test]
@@ -44,7 +51,9 @@ mod tests {
         }
 
         assert_eq!(
-            simple_with_serde(Some("{\"person\": {\"name\": \"John\", \"age\": 42}}".to_string())),
+            simple_with_serde(Some(
+                "{\"person\": {\"name\": \"John\", \"age\": 42}}".to_string()
+            )),
             Ok("\"Hello, John!\"".to_string())
         );
     }
@@ -63,13 +72,15 @@ mod tests {
         }
 
         assert_eq!(
-            simple_with_serde_and_args(Some("{\"person\": {\"name\": \"John\", \"age\": 42}, \"a\": 1, \"b\": 2}".to_string())),
+            simple_with_serde_and_args(Some(
+                "{\"person\": {\"name\": \"John\", \"age\": 42}, \"a\": 1, \"b\": 2}".to_string()
+            )),
             Ok("\"Hello, John! 1 + 2 = 3\"".to_string())
         );
     }
 
     #[test]
-    fn calls_array_of_function_on_args () {
+    fn calls_array_of_function_on_args() {
         #[dynfn]
         fn sum(a: i32, b: i32) -> i32 {
             a + b

@@ -10,6 +10,9 @@ pub fn dynfn(_: TokenStream, input: TokenStream) -> TokenStream {
     let item_fn = syn::parse_macro_input!(input as syn::ItemFn);
 
     let visibility = item_fn.vis.clone();
+
+    let asyncness = item_fn.sig.asyncness.clone();
+
     let fn_name = item_fn.sig.ident.clone();
     let function = Function {
         name: item_fn.sig.ident.to_string(),
@@ -39,7 +42,7 @@ pub fn dynfn(_: TokenStream, input: TokenStream) -> TokenStream {
 
         #data_structure
 
-        #visibility fn #fn_name (data: Option<String>) -> std::result::Result<String, ()> {
+        #visibility #asyncness fn #fn_name (data: Option<String>) -> std::result::Result<String, ()> {
             use serde_json;
 
             #inner_func

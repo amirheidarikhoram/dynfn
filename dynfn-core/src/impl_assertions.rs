@@ -29,6 +29,7 @@ impl ToTokens for ImplAssertions {
         let assertions = types
             .iter()
             .map(|ty| {
+                // FIXME: I am repeating this for same type
                 quote! {
                     assert_impl_all!(#ty: Serialize, Deserialize<'static>);
                 }
