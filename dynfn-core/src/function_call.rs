@@ -48,7 +48,6 @@ impl ToTokens for FunctionCall {
     }
 }
 
-// FIXME: update tests
 #[cfg(test)]
 mod function_call_tests {
     use super::*;
@@ -69,7 +68,14 @@ mod function_call_tests {
 
         let expected = quote! {
             let result = test(arg1, arg2).await;
-            serde_json::to_string(&result).expect("An error occured while parsing json")
+            match serde_json::to_string(&result) {
+                Ok(ser_result) => {
+                    Ok(ser_result)
+                }
+                Err(_) => {
+                    Err(())
+                }
+            }
         };
 
         let mut tokens = proc_macro2::TokenStream::new();

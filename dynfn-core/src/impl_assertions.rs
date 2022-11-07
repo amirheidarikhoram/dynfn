@@ -1,3 +1,6 @@
+use std::collections::{HashMap};
+
+use proc_macro2::TokenStream;
 use quote::{quote, ToTokens};
 use syn::PatType;
 
@@ -26,10 +29,19 @@ impl ToTokens for ImplAssertions {
             syn::ReturnType::Type(_, ty) => types.push(*ty.clone()),
         };
 
-        let assertions = types
-            .iter()
+        let mut types_hash_map: HashMap<String, TokenStream> = HashMap::new();
+
+        for ty in types.into_iter() {
+            let key = ty.to_token_stream().to_string();
+            let value = ty.to_token_stream();
+
+            types_hash_map.entry(key).or_insert(value);
+        }
+
+        let assertions = types_hash_map
+            .values()
+            .into_iter()
             .map(|ty| {
-                // FIXME: I am repeating this for same type
                 quote! {
                     assert_impl_all!(#ty: Serialize, Deserialize<'static>);
                 }
